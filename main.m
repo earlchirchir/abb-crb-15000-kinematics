@@ -193,9 +193,10 @@ title('End Effector Position Along Path');
 xlabel('Time [s]');
 ylabel('Distance [m]');
 grid on;
+saveas(gcf, 'End_Effector_Trajectory_Profiles.png');
 
 % Plot 3D trajectory
-figure('Name', 'End Effector Path');
+figure('Name', 'End Effector Path 3D');
 plot3(p(1,:), p(2,:), p(3,:), 'b-', 'LineWidth', 2);
 hold on;
 plot3(p_init(1), p_init(2), p_init(3), 'go', 'MarkerSize', 10, 'LineWidth', 2);
@@ -207,6 +208,7 @@ xlabel('X [m]');
 ylabel('Y [m]');
 zlabel('Z [m]');
 legend('Path', 'Start', 'End');
+saveas(gcf, 'End_Effector_Path_3D.png');
 
 % Plot joint angles
 figure('Name', 'Joint Trajectories');
@@ -216,6 +218,7 @@ xlabel('Time [s]');
 ylabel('Angle [deg]');
 grid on;
 legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
+saveas(gcf, 'Joint_Trajectories.png');
 
 q_history_RoboDK = q_history;
 q_history_RoboDK(:,2) = q_history_RoboDK(:,2)+pi/2;
@@ -224,8 +227,7 @@ joint_data = array2table([t', rad2deg(q_history_RoboDK)], 'VariableNames', ...
     {'Time', 'Joint1', 'Joint2', 'Joint3', 'Joint4', 'Joint5', 'Joint6'});
 writetable(joint_data, 'joint_trajectories.csv');
 
-
-figure('Name', 'Bang-Coast-Bang Velocity Profile');
+figure('Name', 'Bang Coast Bang Velocity Profile');
 plot(t, velocity, 'LineWidth', 2);
 hold on;
 plot([0, Ts], [vmax, vmax], 'r--');
@@ -240,8 +242,7 @@ text(Ts, 0, 'Ts', 'VerticalAlignment', 'top');
 text(T-Ts, 0, 'T-Ts', 'VerticalAlignment', 'top');
 text(0, vmax, 'vmax', 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom');
 grid on;
-
-
+saveas(gcf, 'Bang_Coast_Bang_Velocity_Profile.png');
 
 figure('Name', 'Joint Velocities');
 plot(t, rad2deg(qdot_history), 'LineWidth', 2);
@@ -250,6 +251,7 @@ xlabel('Time [s]');
 ylabel('Angular Velocity [deg]');
 legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
 grid on;
+saveas(gcf, 'Joint_Velocities.png');
 
 % Calculate tracking error
 tracking_error = zeros(1, num_points);
@@ -266,10 +268,10 @@ ylabel('Error [m]');
 yline(0.01, 'r--', 'LineWidth', 1.5);
 text(T, 0.01, '1cm threshold', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', 'r');
 grid on;
-
+saveas(gcf, 'Tracking_Error.png');
 
 % Plot 2D trajectory
-figure('Name', 'End Effector Path');
+figure('Name', 'End Effector Path 2D');
 plot(p(2,:), p(3,:), 'b-', 'LineWidth', 2);
 hold on;
 plot(p_init(2), p_init(3), 'go', 'MarkerSize', 10, 'LineWidth', 2);
@@ -280,7 +282,7 @@ xlabel('Y [m]');
 ylabel('Z [m]');
 legend('Path', 'Start', 'End');
 axis equal;
-
+saveas(gcf, 'End_Effector_Path_2D.png');
 
 figure('Name', '3D Trajectory Animation');
 
@@ -303,8 +305,12 @@ h_time = text(min(p(1,:)), max(p(2,:)), max(p(3,:)), '', 'VerticalAlignment', 't
 h_speed = text(min(p(1,:)), max(p(2,:)), max(p(3,:))-0.05, '', 'VerticalAlignment', 'top');
 h_accel = text(min(p(1,:)), max(p(2,:)), max(p(3,:))-0.1, '', 'VerticalAlignment', 'top');
 
+% Setup Video Writer
+v = VideoWriter('simulation_animation.mp4', 'MPEG-4');
+open(v);
+
 % Animate the motion
-for i = 1:num_points
+for i = 1:10:num_points
     % Update marker position
     set(h_marker, 'XData', p(1,i), 'YData', p(2,i), 'ZData', p(3,i));
     
@@ -313,8 +319,10 @@ for i = 1:num_points
     set(h_speed, 'String', sprintf('Speed: %.2f m/s', velocity(i)));
     set(h_accel, 'String', sprintf('Acceleration: %.2f m/s^2', acceleration(i)));
     
-    % Pause briefly to create animation effect
-    pause(0.01);
+    drawnow limitrate;
+    frame = getframe(gcf);
+    writeVideo(v, frame);
 end
+close(v);
 
 
