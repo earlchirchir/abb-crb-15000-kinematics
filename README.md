@@ -21,6 +21,26 @@ The project simulates the movement of the robotic arm's end-effector from an ini
 Here is a quick look at the simulated trajectory and kinematics of the ABB CRB 15000:
 
 <video src="https://github.com/earlchirchir/abb-crb-15000-kinematics/raw/master/demonstration.mp4" controls="controls" muted="muted" style="max-width: 100%;"></video>
+## Generated Plots
+
+Below are the static trajectory and kinematics profiles automatically generated during the simulation:
+
+### 3D End Effector Path
+![End Effector Path 3D](./End_Effector_Path_3D.png)
+
+### Trajectory Profiles
+![End Effector Trajectory Profiles](./End_Effector_Trajectory_Profiles.png)
+
+### Velocity Details
+![Bang Coast Bang Velocity Profile](./Bang_Coast_Bang_Velocity_Profile.png)
+
+### Joint Kinematics
+![Joint Trajectories](./Joint_Trajectories.png)
+![Joint Velocities](./Joint_Velocities.png)
+
+### Tracking Error & 2D Projection
+![Tracking Error](./Tracking_Error.png)
+![End Effector Path 2D](./End_Effector_Path_2D.png)
 
 ## File Structure
 * `main.m`: The primary entry point script that orchestrates the simulation, trajectory generation, IK solving, and plotting.
