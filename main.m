@@ -55,37 +55,37 @@ fprintf('  Total Distance: %.4f m\n', total_distance);
 fprintf('  vmax: %.2f m/s, amax: %.2f m/s^2\n', vmax, amax);
 fprintf('  Calculated Total Time T: %.4f s\n', T);
 
-% Generate the time-optimal bang-coast-bang trajectory
-for i = 1:num_points
-    if t(i) <= Ts
-        if i == 1, fprintf('Starting acceleration phase...\n'); end
-        % Acceleration phase
-        acceleration(i) = amax;
-        velocity(i) = amax * t(i);
-        sigma(i) = 0.5 * amax * t(i)^2;
-    elseif t(i) <= (T - Ts)
-        % Coast phase (if it exists)
-        if i == 500, fprintf('Entering coast phase...\n'); end
-        acceleration(i) = 0;
-        velocity(i) = vmax;
-        sigma(i) = vmax * t(i) - 0.5 * vmax^2/amax;
-    else
-        % Deceleration phase
-        if i == 900, fprintf('Starting deceleration phase...\n'); end
-        time_remaining = T - t(i);
-        acceleration(i) = -amax;
-        velocity(i) = amax * time_remaining;
-        sigma(i) = total_distance - 0.5 * amax * time_remaining^2;
-    end
-    
-    % Convert scalar motion profiles into Cartesian trajectories
-    direction = (p_final - p_init) / total_distance;  % Unit vector of motion
-    
-    % Calculate position, velocity, and acceleration vectors
-    p(:,i) = p_init + sigma(i) * direction;
-    pdot(:,i) = velocity(i) * direction;
-    pddot(:,i) = acceleration(i) * direction;
-end
+% Generate the time-optimal bang-coast-bang trajectory (Vectorized)
+fprintf('Starting acceleration, coast, and deceleration phases...\n');
+
+% Logical masks for the three phases
+accel_mask = (t <= Ts);
+coast_mask = (t > Ts) & (t <= (T - Ts));
+decel_mask = (t > (T - Ts));
+
+% Acceleration Phase
+acceleration(accel_mask) = amax;
+velocity(accel_mask) = amax * t(accel_mask);
+sigma(accel_mask) = 0.5 * amax * t(accel_mask).^2;
+
+% Coast Phase
+acceleration(coast_mask) = 0;
+velocity(coast_mask) = vmax;
+sigma(coast_mask) = vmax * t(coast_mask) - 0.5 * vmax^2 / amax;
+
+% Deceleration Phase
+time_remaining = T - t(decel_mask);
+acceleration(decel_mask) = -amax;
+velocity(decel_mask) = amax * time_remaining;
+sigma(decel_mask) = total_distance - 0.5 * amax * time_remaining.^2;
+
+% Convert scalar motion profiles into Cartesian trajectories
+direction = (p_final - p_init) / total_distance;  % Unit vector of motion
+
+% Calculate position, velocity, and acceleration vectors
+p = p_init + direction * sigma;
+pdot = direction * velocity;
+pddot = direction * acceleration;
 
 % Find initial joint configuration using gradient method
 fprintf('Initial trajectory calculated. Starting inverse kinematics solver...\n');
