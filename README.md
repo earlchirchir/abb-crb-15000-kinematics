@@ -16,6 +16,12 @@ The project simulates the movement of the robotic arm's end-effector from an ini
   * Employs the Jacobian Moore-Penrose pseudo-inverse for continuous trajectory tracking (Inverse Differential Kinematics).
 * **Visualization:** Plots detailed graphs of position, velocity, and acceleration profiles, and provides a 3D animation of the robotic arm's end-effector motion.
 
+## Demonstration
+
+Here is a quick look at the simulated trajectory and kinematics of the ABB CRB 15000:
+
+<video src="demonstration.mp4" controls="controls" muted="muted" width="800"></video>
+
 ## File Structure
 * `main.m`: The primary entry point script that orchestrates the simulation, trajectory generation, IK solving, and plotting.
 * `DH.m`: Defines the Denavit-Hartenberg parameters for the ABB CRB 15000.
