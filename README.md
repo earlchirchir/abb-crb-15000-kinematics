@@ -20,7 +20,7 @@ The project simulates the movement of the robotic arm's end-effector from an ini
 
 Here is a quick look at the simulated trajectory and kinematics of the ABB CRB 15000:
 
-<video src="demonstration.mp4" controls="controls" muted="muted" width="800"></video>
+<video src="https://github.com/earlchirchir/abb-crb-15000-kinematics/raw/master/demonstration.mp4" controls="controls" muted="muted" style="max-width: 100%;"></video>
 
 ## File Structure
 * `main.m`: The primary entry point script that orchestrates the simulation, trajectory generation, IK solving, and plotting.
