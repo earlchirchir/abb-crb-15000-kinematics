@@ -30,7 +30,9 @@ Below are the static trajectory and kinematics profiles automatically generated 
 ![End Effector Path 3D](./End_Effector_Path_3D.png)
 
 ### 3D Trajectory Animation
-<video src="https://github.com/earlchirchir/abb-crb-15000-kinematics/raw/master/simulation_animation.mp4" controls="controls" muted="muted" style="max-width: 100%;"></video>
+https://github.com/earlchirchir/abb-crb-15000-kinematics/raw/master/simulation_animation.mp4
+
+[If the video doesn't play automatically, click here to view or download it](https://github.com/earlchirchir/abb-crb-15000-kinematics/raw/master/simulation_animation.mp4)
 
 ### Trajectory Profiles
 ![End Effector Trajectory Profiles](./End_Effector_Trajectory_Profiles.png)
